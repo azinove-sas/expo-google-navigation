@@ -4,6 +4,7 @@
   "description": "Google turn by turn navigation",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "plugin": "./app.plugin.js",
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
@@ -18,8 +19,9 @@
   "keywords": [
     "react-native",
     "expo",
-    "expo-google-navigation",
-    "ExpoGoogleNavigation"
+    "google-maps",
+    "navigation",
+    "gps"
   ],
   "repository": "https://github.com/azinove-sas/expo-google-navigation",
   "bugs": {
@@ -28,15 +30,19 @@
   "author": "patrick-eiermann <patrick.eiermann@azinove.com> (azinove-sas)",
   "license": "MIT",
   "homepage": "https://github.com/azinove-sas/expo-google-navigation#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@expo/config-plugins": "^8.0.8"
+  },
   "devDependencies": {
     "@types/react": "~19.0.0",
     "expo-module-scripts": "^4.1.6",
     "expo": "~53.0.0",
+    "expo-modules-core": "~1.12.0",
     "react-native": "0.79.1"
   },
   "peerDependencies": {
     "expo": "*",
+    "expo-modules-core": "*",
     "react": "*",
     "react-native": "*"
   }

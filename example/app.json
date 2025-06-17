@@ -1,31 +1,36 @@
 {
   "expo": {
-    "name": "expo-google-navigation-example",
-    "slug": "expo-google-navigation-example",
+    "name": "Google Navigation Example",
+    "slug": "google-navigation-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "expo.modules.googlenavigation.example"
+      "deploymentTarget": "16.0",
+      "bundleIdentifier": "com.patrickeiermann.googlenavigationexample"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "expo.modules.googlenavigation.example"
+      "minSdkVersion": 23,
+      "package": "com.patrickeiermann.googlenavigationexample"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "plugins": [
+      [
+        "expo-google-navigation",
+        {
+          "androidApiKey": "AIzaSyDRjUVbbSY-X-vRY0TwNlqjX4JMmxhlfi0",
+          "iosApiKey": "AIzaSyDRjUVbbSY-X-vRY0TwNlqjX4JMmxhlfi0"
+        }
+      ]
+    ]
   }
 }

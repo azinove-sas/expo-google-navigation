@@ -1,73 +1,59 @@
-import { useEvent } from 'expo';
-import ExpoGoogleNavigation, { ExpoGoogleNavigationView } from 'expo-google-navigation';
-import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Button, StyleSheet } from 'react-native';
+import { GoogleMapsNavigation, NavigationMethods } from 'expo-google-navigation';
 
 export default function App() {
-  const onChangePayload = useEvent(ExpoGoogleNavigation, 'onChange');
+  const navigationRef = useRef<NavigationMethods>(null);
+
+  const startNavigation = () => {
+    navigationRef.current?.startNavigation();
+  };
+
+  const stopNavigation = () => {
+    navigationRef.current?.stopNavigation();
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
-          <Text>{ExpoGoogleNavigation.PI}</Text>
-        </Group>
-        <Group name="Functions">
-          <Text>{ExpoGoogleNavigation.hello()}</Text>
-        </Group>
-        <Group name="Async functions">
-          <Button
-            title="Set value"
-            onPress={async () => {
-              await ExpoGoogleNavigation.setValueAsync('Hello from JS!');
-            }}
-          />
-        </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
-          <ExpoGoogleNavigationView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
-        </Group>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    <View style={styles.container}>
+      <GoogleMapsNavigation
+        ref={navigationRef}
+        style={styles.map}
+        destinations={[
+          {
+            latitude: 37.7749,
+            longitude: -122.4194,
+            title: 'San Francisco',
+          },
+        ]}
+        options={{
+          travelMode: 'driving',
+          avoidTolls: false,
+        }}
+        showTraffic={true}
+        showSpeedLimits={true}
+        onNavigationStarted={() => console.log('Navigation started')}
+        onNavigationFinished={() => console.log('Navigation finished')}
+        onNavigationError={(error) => console.error('Navigation error:', error)}
+      />
 
-function Group(props: { name: string; children: React.ReactNode }) {
-  return (
-    <View style={styles.group}>
-      <Text style={styles.groupHeader}>{props.name}</Text>
-      {props.children}
+      <View style={styles.controls}>
+        <Button title="Start Navigation" onPress={startNavigation} />
+        <Button title="Stop Navigation" onPress={stopNavigation} />
+      </View>
     </View>
   );
 }
 
-const styles = {
-  header: {
-    fontSize: 30,
-    margin: 20,
-  },
-  groupHeader: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  group: {
-    margin: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-  },
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eee',
   },
-  view: {
+  map: {
     flex: 1,
-    height: 200,
   },
-};
+  controls: {
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+});

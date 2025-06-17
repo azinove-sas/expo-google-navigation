@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'expo.modules.googlenavigation.example'
+    namespace 'com.patrickeiermann.googlenavigationexample'
     defaultConfig {
-        applicationId 'expo.modules.googlenavigation.example'
+        applicationId 'com.patrickeiermann.googlenavigationexample'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

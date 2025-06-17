@@ -2,9 +2,13 @@ package expo.modules.googlenavigation
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URL
+import expo.modules.kotlin.Promise
+import com.google.android.libraries.navigation.NavigationApi
+import com.google.android.libraries.navigation.Navigator
 
 class ExpoGoogleNavigationModule : Module() {
+  private var navigator: Navigator? = null
+
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
@@ -14,37 +18,94 @@ class ExpoGoogleNavigationModule : Module() {
     // The module will be accessible from `requireNativeModule('ExpoGoogleNavigation')` in JavaScript.
     Name("ExpoGoogleNavigation")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
-
     // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    Events("onNavigationStarted", "onNavigationFinished", "onRouteChanged", "onNavigationError")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("hello") {
       "Hello world! 👋"
     }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+    AsyncFunction("initializeNavigation") { promise: Promise ->
+      try {
+        // Initialize navigation if needed
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to initialize navigation: ${e.message}", e)
+      }
+    }
+
+    AsyncFunction("startNavigation") { promise: Promise ->
+      try {
+        // TODO: Implement proper navigation start logic
+        // navigator?.startGuidance() // Use correct Google Navigation SDK method
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to start navigation: ${e.message}", e)
+      }
+    }
+
+    AsyncFunction("stopNavigation") { promise: Promise ->
+      try {
+        // TODO: Implement proper navigation stop logic
+        // navigator?.stopGuidance() // Use correct Google Navigation SDK method
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to stop navigation: ${e.message}", e)
+      }
+    }
+
+    AsyncFunction("pauseNavigation") { promise: Promise ->
+      try {
+        // TODO: Implement proper navigation pause logic
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to pause navigation: ${e.message}", e)
+      }
+    }
+
+    AsyncFunction("resumeNavigation") { promise: Promise ->
+      try {
+        // TODO: Implement proper navigation resume logic
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to resume navigation: ${e.message}", e)
+      }
+    }
+
+    AsyncFunction("recalculateRoute") { promise: Promise ->
+      try {
+        // TODO: Implement route recalculation logic
+        promise.resolve(null)
+      } catch (e: Exception) {
+        promise.reject("NAVIGATION_ERROR", "Failed to recalculate route: ${e.message}", e)
+      }
     }
 
     // Enables the module to be used as a native view. Definition components that are accepted as part of
     // the view definition: Prop, Events.
-    View(ExpoGoogleNavigationView::class) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { view: ExpoGoogleNavigationView, url: URL ->
-        view.webView.loadUrl(url.toString())
+    View(GoogleMapsNavigationView::class) {
+      Events("onNavigationStarted", "onNavigationFinished", "onRouteChanged", "onNavigationError")
+      
+      Prop("destinations") { view: GoogleMapsNavigationView, destinations: List<Map<String, Any>> ->
+        view.setDestinations(destinations)
       }
-      // Defines an event that the view can send to JavaScript.
-      Events("onLoad")
+      
+      Prop("options") { view: GoogleMapsNavigationView, options: Map<String, Any>? ->
+        view.setNavigationOptions(options)
+      }
+      
+      Prop("showTraffic") { view: GoogleMapsNavigationView, showTraffic: Boolean ->
+        view.setShowTraffic(showTraffic)
+      }
+      
+      Prop("showSpeedLimits") { view: GoogleMapsNavigationView, showSpeedLimits: Boolean ->
+        view.setShowSpeedLimits(showSpeedLimits)
+      }
+      
+      Prop("nightMode") { view: GoogleMapsNavigationView, nightMode: Boolean ->
+        view.setNightMode(nightMode)
+      }
     }
   }
 }

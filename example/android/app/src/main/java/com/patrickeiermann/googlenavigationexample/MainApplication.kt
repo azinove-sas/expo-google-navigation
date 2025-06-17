@@ -1,4 +1,4 @@
-package expo.modules.googlenavigation.example
+package com.patrickeiermann.googlenavigationexample
 
 import android.app.Application
 import android.content.res.Configuration
