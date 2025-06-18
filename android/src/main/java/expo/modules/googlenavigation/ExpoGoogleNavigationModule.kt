@@ -8,6 +8,7 @@ import com.google.android.libraries.navigation.Navigator
 
 class ExpoGoogleNavigationModule : Module() {
   private var navigator: Navigator? = null
+  private var currentView: GoogleMapsNavigationView? = null
 
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
@@ -28,7 +29,6 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("initializeNavigation") { promise: Promise ->
       try {
-        // Initialize navigation if needed
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to initialize navigation: ${e.message}", e)
@@ -37,8 +37,7 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("startNavigation") { promise: Promise ->
       try {
-        // TODO: Implement proper navigation start logic
-        // navigator?.startGuidance() // Use correct Google Navigation SDK method
+        navigator?.startGuidance()
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to start navigation: ${e.message}", e)
@@ -47,8 +46,8 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("stopNavigation") { promise: Promise ->
       try {
-        // TODO: Implement proper navigation stop logic
-        // navigator?.stopGuidance() // Use correct Google Navigation SDK method
+        navigator?.stopGuidance()
+        navigator?.clearDestinations()
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to stop navigation: ${e.message}", e)
@@ -57,7 +56,7 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("pauseNavigation") { promise: Promise ->
       try {
-        // TODO: Implement proper navigation pause logic
+        navigator?.stopGuidance()
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to pause navigation: ${e.message}", e)
@@ -66,7 +65,7 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("resumeNavigation") { promise: Promise ->
       try {
-        // TODO: Implement proper navigation resume logic
+        navigator?.startGuidance()
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to resume navigation: ${e.message}", e)
@@ -75,7 +74,7 @@ class ExpoGoogleNavigationModule : Module() {
 
     AsyncFunction("recalculateRoute") { promise: Promise ->
       try {
-        // TODO: Implement route recalculation logic
+        // The Google Navigation SDK handles this automatically
         promise.resolve(null)
       } catch (e: Exception) {
         promise.reject("NAVIGATION_ERROR", "Failed to recalculate route: ${e.message}", e)
@@ -88,6 +87,8 @@ class ExpoGoogleNavigationModule : Module() {
       Events("onNavigationStarted", "onNavigationFinished", "onRouteChanged", "onNavigationError")
       
       Prop("destinations") { view: GoogleMapsNavigationView, destinations: List<Map<String, Any>> ->
+        currentView = view
+        navigator = view.navigator
         view.setDestinations(destinations)
       }
       

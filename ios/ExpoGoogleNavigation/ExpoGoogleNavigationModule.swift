@@ -1,6 +1,10 @@
 import ExpoModulesCore
+import GoogleNavigation
+import GoogleMaps
 
 public class ExpoGoogleNavigationModule: Module {
+  private var currentNavigationView: ExpoGoogleNavigationView?
+  
   // Each module class must implement the definition function. The definition consists of components
   // that describes the module's functionality and behavior.
   // See https://docs.expo.dev/modules/module-api for more details about available components.
@@ -18,32 +22,65 @@ public class ExpoGoogleNavigationModule: Module {
     }
 
     AsyncFunction("initializeNavigation") { (promise: Promise) in
-      // TODO: Initialize navigation if needed
+      // Google Maps SDK initialization should be done in the app delegate
+      // This is just a placeholder for any additional initialization
       promise.resolve(nil)
     }
 
     AsyncFunction("startNavigation") { (promise: Promise) in
-      // TODO: Implement proper navigation start logic
+      guard let view = self.currentNavigationView,
+            view.isNavigationInitialized else {
+        promise.reject("NAVIGATION_ERROR", "Navigation not initialized")
+        return
+      }
+      
+      view.startNavigation()
       promise.resolve(nil)
     }
 
     AsyncFunction("stopNavigation") { (promise: Promise) in
-      // TODO: Implement proper navigation stop logic
+      guard let view = self.currentNavigationView else {
+        promise.reject("NAVIGATION_ERROR", "Navigator not available")
+        return
+      }
+      
+      view.stopNavigation()
       promise.resolve(nil)
     }
 
     AsyncFunction("pauseNavigation") { (promise: Promise) in
-      // TODO: Implement proper navigation pause logic
+      guard let view = self.currentNavigationView else {
+        promise.reject("NAVIGATION_ERROR", "Navigator not available")
+        return
+      }
+      
+      view.pauseNavigation()
       promise.resolve(nil)
     }
 
     AsyncFunction("resumeNavigation") { (promise: Promise) in
-      // TODO: Implement proper navigation resume logic
+      guard let view = self.currentNavigationView,
+            view.isNavigationInitialized else {
+        promise.reject("NAVIGATION_ERROR", "Navigation not initialized")
+        return
+      }
+      
+      view.resumeNavigation()
       promise.resolve(nil)
     }
 
     AsyncFunction("recalculateRoute") { (promise: Promise) in
-      // TODO: Implement route recalculation logic
+      // This would typically be handled automatically by the SDK
+      promise.resolve(nil)
+    }
+
+    AsyncFunction("setDestinations") { (destinations: [[String: Any]], promise: Promise) in
+      guard let view = self.currentNavigationView else {
+        promise.reject("NAVIGATION_ERROR", "Navigator not available")
+        return
+      }
+      
+      view.setDestinations(destinations)
       promise.resolve(nil)
     }
 
@@ -53,6 +90,7 @@ public class ExpoGoogleNavigationModule: Module {
       Events("onNavigationStarted", "onNavigationFinished", "onRouteChanged", "onNavigationError")
       
       Prop("destinations") { (view: ExpoGoogleNavigationView, destinations: [[String: Any]]) in
+        self.currentNavigationView = view
         view.setDestinations(destinations)
       }
       
